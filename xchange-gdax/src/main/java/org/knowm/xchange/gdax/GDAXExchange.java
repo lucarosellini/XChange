@@ -28,14 +28,7 @@ public class GDAXExchange extends BaseExchange implements Exchange {
 
   @Override
   public ExchangeSpecification getDefaultExchangeSpecification() {
-
-    ExchangeSpecification exchangeSpecification = new ExchangeSpecification(this.getClass().getCanonicalName());
-    exchangeSpecification.setSslUri("https://api.gdax.com");
-    exchangeSpecification.setHost("api.gdax.com");
-    exchangeSpecification.setPort(80);
-    exchangeSpecification.setExchangeName("GDAX");
-    exchangeSpecification.setExchangeDescription("GDAX Exchange is a Bitcoin exchange recently launched in January 2015");
-    return exchangeSpecification;
+    return productionGDAXExchangeSpecification();
   }
 
   @Override
@@ -50,5 +43,25 @@ public class GDAXExchange extends BaseExchange implements Exchange {
     List<GDAXProduct> products = ((GDAXMarketDataServiceRaw) marketDataService).getConbaseExProducts();
     exchangeMetaData = GDAXAdapters.adaptToExchangeMetaData(exchangeMetaData, products);
     //    System.out.println("JSON: " + ObjectMapperHelper.toJSON(exchangeMetaData));
+  }
+  
+  public static ExchangeSpecification productionGDAXExchangeSpecification(){
+    ExchangeSpecification exchangeSpecification = new ExchangeSpecification(GDAXExchange.class.getCanonicalName());
+    exchangeSpecification.setSslUri("https://api.gdax.com");
+    exchangeSpecification.setHost("api.gdax.com");
+    exchangeSpecification.setPort(80);
+    exchangeSpecification.setExchangeName("GDAX");
+    exchangeSpecification.setExchangeDescription("GDAX Exchange is a Bitcoin exchange recently launched in January 2015");
+    return exchangeSpecification;
+  }
+
+  public static ExchangeSpecification sandboxedGDAXExchangeSpecification(){
+    ExchangeSpecification exchangeSpecification = new ExchangeSpecification(GDAXExchange.class.getCanonicalName());
+    exchangeSpecification.setSslUri("https://api-public.sandbox.gdax.com");
+    exchangeSpecification.setHost("api-public.sandbox.gdax.com");
+    exchangeSpecification.setPort(80);
+    exchangeSpecification.setExchangeName("GDAX");
+    exchangeSpecification.setExchangeDescription("GDAX Exchange is a Bitcoin exchange recently launched in January 2015. This is the sandboxed Exchange Specification.");
+    return exchangeSpecification;
   }
 }
