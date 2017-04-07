@@ -8,8 +8,13 @@ import org.knowm.xchange.Exchange;
 import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.dto.account.AccountInfo;
 import org.knowm.xchange.dto.account.Balance;
+import org.knowm.xchange.dto.account.FundingRecord;
 import org.knowm.xchange.dto.account.Wallet;
+import org.knowm.xchange.exceptions.ExchangeException;
+import org.knowm.xchange.exceptions.NotAvailableFromExchangeException;
+import org.knowm.xchange.exceptions.NotYetImplementedForExchangeException;
 import org.knowm.xchange.service.account.AccountService;
+import org.knowm.xchange.service.trade.params.TradeHistoryParams;
 
 /**
  * @author Zach Holmes
@@ -30,7 +35,7 @@ public class PoloniexAccountService extends PoloniexAccountServiceRaw implements
   @Override
   public AccountInfo getAccountInfo() throws IOException {
 
-    List<Balance> balances = getWallets();
+    List<Balance> balances = getExchangeWallet();
     return new AccountInfo(new Wallet(balances));
   }
 
@@ -46,4 +51,13 @@ public class PoloniexAccountService extends PoloniexAccountServiceRaw implements
     return getDepositAddress(currency.toString());
   }
 
+  @Override
+  public TradeHistoryParams createFundingHistoryParams() {
+    throw new NotAvailableFromExchangeException();
+  }
+
+  @Override
+  public List<FundingRecord> getFundingHistory(TradeHistoryParams params) throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException{
+    throw new NotYetImplementedForExchangeException();
+  }
 }

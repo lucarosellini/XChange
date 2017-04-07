@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexBalancesResponse;
+import org.knowm.xchange.bitfinex.v1.dto.account.BitfinexDepositWithdrawalHistoryResponse;
 import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexDepth;
 import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexLendLevel;
 import org.knowm.xchange.bitfinex.v1.dto.marketdata.BitfinexLevel;
@@ -21,6 +22,7 @@ import org.knowm.xchange.currency.Currency;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.Order.OrderType;
 import org.knowm.xchange.dto.account.Balance;
+import org.knowm.xchange.dto.account.FundingRecord;
 import org.knowm.xchange.dto.account.Wallet;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
@@ -48,6 +50,13 @@ public final class BitfinexAdapters {
 
   }
 
+  public static String adaptBitfinexCurrency(String bitfinexSymbol) {
+	  String currency = bitfinexSymbol.toUpperCase();
+	  if (currency.equals("DSH")) {
+		  currency = "DASH";
+	  }
+	  return currency;
+  }
   public static List<CurrencyPair> adaptCurrencyPairs(Collection<String> bitfinexSymbol) {
 
     List<CurrencyPair> currencyPairs = new ArrayList<CurrencyPair>();
@@ -59,8 +68,8 @@ public final class BitfinexAdapters {
 
   public static CurrencyPair adaptCurrencyPair(String bitfinexSymbol) {
 
-    String tradableIdentifier = bitfinexSymbol.substring(0, 3).toUpperCase();
-    String transactionCurrency = bitfinexSymbol.substring(3).toUpperCase();
+    String tradableIdentifier = adaptBitfinexCurrency(bitfinexSymbol.substring(0, 3));
+    String transactionCurrency = adaptBitfinexCurrency(bitfinexSymbol.substring(3));
     return new CurrencyPair(tradableIdentifier, transactionCurrency);
   }
 
@@ -231,7 +240,7 @@ public final class BitfinexAdapters {
     // for each currency we have multiple balances types: exchange, trading, deposit.
     // each of those may be partially frozen/available
     for (BitfinexBalancesResponse balance : response) {
-      String currencyName = balance.getCurrency().toUpperCase();
+      String currencyName = adaptBitfinexCurrency(balance.getCurrency());
       BigDecimal[] balanceDetail = balancesByCurrency.get(currencyName);
       if (balanceDetail == null) {
         balanceDetail = new BigDecimal[] { balance.getAmount(), balance.getAvailable() };
@@ -308,5 +317,25 @@ public final class BitfinexAdapters {
     }
 
     return metaData;
+  }
+
+  public static List<FundingRecord> adaptFundingHistory(BitfinexDepositWithdrawalHistoryResponse[] bitfinexDepositWithdrawalHistoryResponses){
+    final List<FundingRecord> fundingRecords = new ArrayList<FundingRecord>();
+    for (BitfinexDepositWithdrawalHistoryResponse responseEntry : bitfinexDepositWithdrawalHistoryResponses) {
+      String address = responseEntry.getAddress();
+      String description = responseEntry.getDescription();
+      String txnId = "";
+      final Currency currency = Currency.getInstance(responseEntry.getCurrency());
+      if (currency == Currency.BTC && responseEntry.getType() == FundingRecord.Type.WITHDRAWAL &&
+              description.contains(",")){
+        txnId = description.substring(description.indexOf("txid: ")+ "txid: ".length());
+      }
+      FundingRecord fundingRecordEntry = new FundingRecord(address, responseEntry.getTimestamp(),
+              currency, responseEntry.getAmount(), txnId, responseEntry.getType(),
+              responseEntry.getStatus(), null, null, description);
+
+      fundingRecords.add(fundingRecordEntry);
+    }
+    return fundingRecords;
   }
 }
