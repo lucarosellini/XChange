@@ -5,7 +5,7 @@
 
 	<groupId>org.knowm.xchange</groupId>
 	<artifactId>xchange-parent</artifactId>
-	<version>4.2.1-SNAPSHOT</version>
+	<version>4.2.1_LR-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>XChange</name>
@@ -38,6 +38,7 @@
 		<url>https://github.com/timmolter/XChange/issues</url>
 	</issueManagement>
 
+	<!--
 	<distributionManagement>
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>
@@ -50,6 +51,19 @@
 			<url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 		<downloadUrl>https://oss.sonatype.org/content/groups/public/org/knowm/xchange</downloadUrl>
+	</distributionManagement>
+	-->
+	<distributionManagement>
+		<repository>
+			<id>lujo-gcloud-release-repo</id>
+			<name>Release Google Cloud Lujo Repository</name>
+			<url>https://mavenrepo-163919.appspot.com/release</url>
+		</repository>
+		<snapshotRepository>
+			<id>lujo-gcloud-snapshot-repo</id>
+			<name>Snapshot Google Cloud Lujo Repository</name>
+			<url>https://mavenrepo-163919.appspot.com/snapshot</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 	<scm>
@@ -347,7 +361,13 @@
 	</profiles>
 
 	<build>
-
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build</groupId>
+				<artifactId>aws-maven</artifactId>
+				<version>5.0.0.RELEASE</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<!-- Ensure compilation is done under Java 7 in all environments -->
 			<plugin>

@@ -5,6 +5,7 @@
 *.ipr
 *.ips
 .idea/
+pom.xml.versionsBackup
 
 # Eclipse
 .settings/
