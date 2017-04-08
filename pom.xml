@@ -5,7 +5,7 @@
 
 	<groupId>org.knowm.xchange</groupId>
 	<artifactId>xchange-parent</artifactId>
-	<version>4.2.1_LR-SNAPSHOT</version>
+	<version>4.2.1_develop_f75b0d3</version>
 	<packaging>pom</packaging>
 
 	<name>XChange</name>
@@ -361,13 +361,6 @@
 	</profiles>
 
 	<build>
-		<extensions>
-			<extension>
-				<groupId>org.springframework.build</groupId>
-				<artifactId>aws-maven</artifactId>
-				<version>5.0.0.RELEASE</version>
-			</extension>
-		</extensions>
 		<plugins>
 			<!-- Ensure compilation is done under Java 7 in all environments -->
 			<plugin>
@@ -392,6 +385,7 @@
 				</configuration>
 			</plugin>
 
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -425,7 +419,7 @@
 					<skip>false</skip>
 				</configuration>
 			</plugin>
-
+			-->
 
 		</plugins>
 	</build>

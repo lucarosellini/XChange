@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.knowm.xchange</groupId>
 		<artifactId>xchange-parent</artifactId>
-		<version>4.2.1_LR-SNAPSHOT</version>
+		<version>4.2.1_develop_f75b0d3</version>
 	</parent>
 
 	<artifactId>xchange-cryptonit</artifactId>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>org.knowm.xchange</groupId>
 			<artifactId>xchange-core</artifactId>
-			<version>4.2.1_LR-SNAPSHOT</version>
+			<version>4.2.1_develop_f75b0d3</version>
 		</dependency>
 
 	</dependencies>
